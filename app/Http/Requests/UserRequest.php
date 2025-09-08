@@ -11,24 +11,35 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|alpha|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:14',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/'
+            ],
+            'age' => 'required|numeric|between:18,30',
         ];
     }
-    public function message()
+
+    /**
+     * Custom messages for validation errors.
+     */
+    public function messages(): array
     {
-       return[
-        'name.required' => "Name is required",
+        return [
+            'name.required' => "Name is required",
             'name.alpha' => 'Name must be alphabetic',
             'email.required' => "Email is required",
             'email.email' => 'Email must be a valid email address',
@@ -40,8 +51,9 @@ class UserRequest extends FormRequest
             'age.required' => 'Age is required',
             'age.numeric' => 'Age must be a number',
             'age.between' => 'Age must be between 18 and 30',
-       ];
+        ];
     }
+
 
     public function attributes(): array
     {

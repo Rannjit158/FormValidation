@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Form; // Make sure this model exists
 
 class FormController extends Controller
 {
@@ -11,27 +11,9 @@ class FormController extends Controller
     {
         return view('form');
     }
-
-    public function store(Request $request)
+    public function store(UserRequest $req)
     {
-        $form = $request->validate([
-            'name' => 'required|alpha|max:255',
-            'email' => 'required|email',
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'max:14',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/'
-            ],
-            'age' => 'required|numeric|between:18,30',
-        ],
-        [
-            
-        ]);
 
-        Form::create($form);
-
-        return redirect('/')->with('success', 'Form submitted successfully');
+        return $req->all();
     }
 }
